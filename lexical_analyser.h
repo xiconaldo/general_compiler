@@ -44,8 +44,6 @@ private:
     std::vector<uint> alphabet_;
     std::unordered_set<TokenType> genericTokenType_;
     std::unordered_map< std::string, TokenType > special_;
-    std::string comment_begin_;
-    std::string comment_end_;
 
     TokenType currentTokenType_;
     TokenType insideCommentTokenType_;
@@ -53,6 +51,7 @@ private:
     uint currentTokenLine_;
 
     std::vector<std::string> token_type_strings_;
+    std::vector<std::string> error_type_strings_;
     std::vector< Token > outputTokeList_;
     std::vector< std::string > error_info_;
 

@@ -30,7 +30,9 @@ Automato::Automato(uint num_states,
 }
 
 void Automato::next_state(Symbol input){
+    //std::cout << current_id_ << " -- " << input << " --> ";
     current_id_ = trans_[current_id_][input];
+    //std::cout << current_id_ << std::endl;
 }
 
 State& Automato::current(){
@@ -42,7 +44,7 @@ State& Automato::start(){
 }
 
 bool Automato::isCurrentFinal(){
-    return current().type_;
+    return current().type_ >= 0;
 }
 
 bool Automato::isCurrentStart(){

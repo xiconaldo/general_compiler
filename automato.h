@@ -7,7 +7,7 @@
 
 typedef unsigned char Symbol;
 typedef unsigned int uint;
-typedef unsigned int TokenType;
+typedef int TokenType;
 
 enum{ NO_TYPE};
 
@@ -27,9 +27,6 @@ private:
     uint **trans_;
     std::vector< State > states_;
 
-    State& current();
-    State& start();
-
 public:
 
     Automato(uint num_states,
@@ -43,6 +40,10 @@ public:
     bool isCurrentStart();
 
     TokenType currentType();
+
+    State& current();
+
+    State& start();
 
 };
 
