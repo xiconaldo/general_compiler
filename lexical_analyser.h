@@ -48,10 +48,13 @@ private:
     std::string comment_end_;
 
     TokenType currentTokenType_;
+    TokenType insideCommentTokenType_;
+    TokenType commentTokenType_;
     uint currentTokenLine_;
 
     std::vector<std::string> token_type_strings_;
     std::vector< Token > outputTokeList_;
+    std::vector< std::string > error_info_;
 
 public:
 
@@ -66,6 +69,8 @@ public:
     bool isSeparator( Symbol symbol );
 
     void printResult();
+
+    void printErrors();
 
     bool isSpecial(const std::string& token);
 

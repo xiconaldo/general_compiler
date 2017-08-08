@@ -38,6 +38,10 @@ LexicalAnalyser::LexicalAnalyser(const std::string& config_file){
             std::string type_name;
             std::istringstream(line.substr(3)) >> type_name;
             token_type_strings_.push_back(type_name);
+            if(type_name == "INC_COMMENT")
+                insideCommentTokenType_ = token_type_strings_.size()-1;
+            else if(type_name == "COMMENT")
+                commentTokenType_ = token_type_strings_.size()-1;
         }
         else if(line.substr(0, 2) == "#g"){
             TokenType token_type;
@@ -74,10 +78,27 @@ LexicalAnalyser::LexicalAnalyser(const std::string& config_file){
 
         std::istringstream(line) >> current_state >> symbols >> next_state;
 
-        for(uint i = 0; i < symbols.size(); i++){
-            transitions.push_back(current_state);
-            transitions.push_back((uint)symbols[i]);
-            transitions.push_back(next_state);
+        if(symbols == "all_except"){
+            std::istringstream(line) >> current_state >> symbols >> symbols >> next_state;
+
+            for(uint i = 0; i < 128; i++){
+                transitions.push_back(current_state);
+                transitions.push_back((uint)i);
+                transitions.push_back(next_state);
+            }
+
+            for(uint i = 0; i < symbols.size(); i++){
+                transitions.push_back(current_state);
+                transitions.push_back((uint)symbols[i]);
+                transitions.push_back(0);
+            }
+        }
+        else{
+            for(uint i = 0; i < symbols.size(); i++){
+                transitions.push_back(current_state);
+                transitions.push_back((uint)symbols[i]);
+                transitions.push_back(next_state);
+            }
         }
     }
     config.close();
@@ -93,14 +114,17 @@ void LexicalAnalyser::analyse(const std::string& input_file){
     sstr << input.rdbuf();
     input_ = sstr.str();
 
-    while( cursor_pos_ < input_.size() ){
-        try{
+    try{
+        while( cursor_pos_ < input_.size() )
             readNextSymbol();
-        }
-        catch (LexicalErrorException err){
-            std::cout << "\n\nAt line " << err.line_ << ": " << err.description_ << std::endl;
-            break;
-        }
+
+        if(currentTokenType_ == insideCommentTokenType_)
+            throw LexicalErrorException(currentTokenLine_, "Incomplete comment");
+    }
+    catch (LexicalErrorException err){
+        std::ostringstream ss;
+        ss << "Error at line " << err.line_ << ": " << err.description_;
+        error_info_.push_back(ss.str());
     }
 
     input.close();
@@ -108,28 +132,13 @@ void LexicalAnalyser::analyse(const std::string& input_file){
 
 void LexicalAnalyser::readNextSymbol(){
 
-    bool flag_comment = false;
+    static bool read_ok = false;
 
-    // Discard comments
-    if(input_.substr(cursor_pos_, comment_begin_.size()) == comment_begin_){
-        while(input_.substr(cursor_pos_, comment_end_.size()) != comment_end_)
-            if(cursor_pos_ >= input_.size())
-                throw LexicalErrorException{line_pos_, "Undefined end of comment error"};
-            else if(input_[cursor_pos_++] == NEW_LINE)
-                line_pos_++;
-        flag_comment = true;
-        cursor_pos_ += comment_end_.size()-1;
-    }
-
-    if(input_[cursor_pos_] == NEW_LINE) line_pos_++;
-
-    if( !isOnLexicalAlphabet( input_[cursor_pos_] ) &&
-        !isSeparator( input_[cursor_pos_] ) &&
-        (input_[cursor_pos_] != comment_end_.back()  || !flag_comment) )
-        throw LexicalErrorException{line_pos_, "Undefined symbol error"};
+    bool comment = (currentTokenType_ == insideCommentTokenType_);
+    if(input_[cursor_pos_] == NEW_LINE && !read_ok) line_pos_++;
 
     // Update Automato
-    automato_->next_state(flag_comment ? ' ' : input_[cursor_pos_]);
+    automato_->next_state(input_[cursor_pos_]);
 
     // If it backs to begin, a new token is generated
     if( automato_->isCurrentStart() ){
@@ -141,17 +150,26 @@ void LexicalAnalyser::readNextSymbol(){
                 currentTokenType_ = special_[currentToken];
 
             Token new_token = {currentTokenType_, currentToken, currentTokenLine_};
-            outputTokeList_.push_back(new_token);
+
+            if(currentTokenType_ != commentTokenType_)
+                outputTokeList_.push_back(new_token);
         }
 
-        if( !isOnLexicalAlphabet( input_[cursor_pos_] ) || flag_comment )
+        if(!comment && !isOnLexicalAlphabet(input_[cursor_pos_]) && !isSeparator(input_[cursor_pos_]))
+            throw LexicalErrorException(currentTokenLine_, "Symbol don't belongs to language");
+
+        if(read_ok){
             cursor_pos_++;
+            read_ok = false;
+        }
+        else read_ok = true;
+
         return;
     }
+    read_ok = false;
 
     // Update buffers
-    if( isOnLexicalAlphabet( input_[cursor_pos_] ) )
-       recent_buffer_.push_back(input_[cursor_pos_]);
+    recent_buffer_.push_back(input_[cursor_pos_]);
 
     if( automato_->isCurrentFinal() ){
         accepted_buffer_.insert(accepted_buffer_.end(), recent_buffer_.begin(), recent_buffer_.end());
@@ -195,6 +213,20 @@ void LexicalAnalyser::printResult(){
         std::cout << std::setw(12) << std::setfill('-') << "|";
         std::cout << std::setw(22) << std::setfill('-') << "+";
         std::cout << std::setw(7) << std::setfill('-') << "+" << "|" << std::endl;
+    }
+
+    std::cout << std::endl;
+    printErrors();
+}
+
+void LexicalAnalyser::printErrors(){
+    if(error_info_.empty()){
+        std::cout << "ANALYSIS COMPLETED SUCCESSFULLY" << std::endl;
+    }
+    else{
+        std::cout << "ANALYSIS FAILED:" << std::endl;
+        for( std::string err : error_info_)
+            std::cout << err << std::endl;
     }
 }
 
