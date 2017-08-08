@@ -1,0 +1,53 @@
+#a abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_.;:(),=<>+-*/
+
+#c { }
+
+#t KEYWORD          --1
+#t IDENTIFIER       --2
+#t INTEGER_NUMBER   --3
+#t REAL_NUMBER      --4
+#t DELIMITER        --5
+#t ASSIGNMENT       --6
+#t REL_OPERATOR     --7
+#t ADD_OPERATOR     --8
+#t MUL_OPERATOR     --9
+
+#g 2
+#k program 1
+#k var 1
+#k integer 1
+#k real 1
+#k boolean 1
+#k procedure 1
+#k begin 1
+#k end 1
+#k if 1
+#k then 1
+#k else 1
+#k while 1
+#k do 1
+#k not 1
+#k or 8
+#k and 9
+
+#s
+13
+0 3 2 5 5 6 7 7 7 8 9 0 4
+
+0 0123456789 1
+0 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ 2
+0 ;(),. 3
+0 : 4
+0 = 6
+0 < 7
+0 > 8
+0 +- 9
+0 */ 10
+1 0123456789 1
+2 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789 2
+4 = 5
+7 => 7
+8 = 8
+1 . 11
+11 0123456789 12
+12 0123456789 12
