@@ -166,9 +166,7 @@ void LexicalAnalyser::analyse(const std::string& input_file){
 
 void LexicalAnalyser::readNextSymbol(){
 
-    static bool read_ok = false;
-
-    if(input_[cursor_pos_] == NEW_LINE && !read_ok) line_pos_++;
+    if(input_[cursor_pos_] == NEW_LINE) line_pos_++;
 
     // Update Automato
     automato_->next_state(input_[cursor_pos_]);
@@ -188,15 +186,17 @@ void LexicalAnalyser::readNextSymbol(){
                 outputTokeList_.push_back(new_token);
         }
 
-        if(read_ok){
+        if(isSeparator(input_[cursor_pos_]) && recent_buffer_.empty()){
             cursor_pos_++;
-            read_ok = false;
         }
-        else read_ok = true;
+        else{
+            if(input_[cursor_pos_] == NEW_LINE) line_pos_--;
+            cursor_pos_ -= recent_buffer_.size();
+            recent_buffer_.clear();
+        }
 
         return;
     }
-    read_ok = false;
 
     // Update buffers
     recent_buffer_.push_back(input_[cursor_pos_]);
