@@ -147,6 +147,7 @@ void LexicalAnalyser::analyse(const std::string& input_file){
     std::stringstream sstr;
     sstr << input.rdbuf();
     input_ = sstr.str();
+    input_.push_back(NEW_LINE);
 
     try{
         while( cursor_pos_ < input_.size() )
