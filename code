@@ -1,9 +1,8 @@
-program teste;{programa exemplo}
+program teste; {programa exemplo}
 var
-valor1: integer;
-valor2: real;
+    valor1: integer;
+    valor2: real;
 begin
-valor1 := 10;
-5.a
+    valor1 := 10;
+    valor_3;
 end.
-5.

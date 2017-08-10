@@ -12,21 +12,19 @@ LexicalAnalyser::LexicalAnalyser(const std::string& config_file){
         std::cerr << "Can't open file " << config_file;
     }
 
+    alphabet_.resize(NUM_SYMBOLS);
     std::string line;
     while( getline(config, line) ){
 
-        if(line.substr(0, 2) == "#a"){
-            alphabet_.resize(128);
-            std::string tmp_alpha;
-            std::istringstream(line) >> tmp_alpha >> tmp_alpha;
-            for( uint i = 0; i < tmp_alpha.size(); i++ ){
-                alphabet_[ (uint)tmp_alpha[i] ] = 1;
+        if(line.substr(0, 2) == "#z"){
+
+            uint tmp_num;
+            std::istringstream sstr_line(line.substr(3));
+
+            while(sstr_line){
+                sstr_line >> tmp_num;
+                alphabet_[ tmp_num ] = 2;
             }
-            alphabet_[ (uint)'\n' ] = 2;
-            alphabet_[ (uint)'\t' ] = 2;
-            alphabet_[ (uint)'\r' ] = 2;
-            alphabet_[ (uint)'\b' ] = 2;
-            alphabet_[ (uint)' ' ] = 2;
         }
         else if(line.substr(0, 2) == "#t"){
             std::string type_name;
@@ -52,16 +50,12 @@ LexicalAnalyser::LexicalAnalyser(const std::string& config_file){
         else if(line.substr(0, 2) == "#s") break;
     }
 
-    uint num_states;
     std::vector< TokenType > state_type;
     std::vector< uint > transitions;
 
     getline(config, line);
-    std::istringstream(line) >> num_states;
-
-    getline(config, line);
     {std::istringstream line_stream(line);
-    for(uint i = 0; i < num_states; i++){
+    while(line_stream){
         TokenType tmp_int;
         line_stream >> tmp_int;
         state_type.push_back(tmp_int);
@@ -75,25 +69,7 @@ LexicalAnalyser::LexicalAnalyser(const std::string& config_file){
 
         if(symbols == "all"){
 
-            for(uint i = 0; i < 128; i++){
-                transitions.push_back(current_state);
-                transitions.push_back((uint)i);
-                transitions.push_back(next_state);
-            }
-        }
-        else if(symbols == "alpha"){
-
-            for(uint i = 0; i < 128; i++){
-                if(!isOnLexicalAlphabet( (Symbol)i )) continue;
-                transitions.push_back(current_state);
-                transitions.push_back((uint)i);
-                transitions.push_back(next_state);
-            }
-        }
-        else if(symbols == "not_alpha"){
-
-            for(uint i = 0; i < 128; i++){
-                if(isOnLexicalAlphabet( (Symbol)i )) continue;
+            for(uint i = 0; i < NUM_SYMBOLS; i++){
                 transitions.push_back(current_state);
                 transitions.push_back((uint)i);
                 transitions.push_back(next_state);
@@ -101,7 +77,7 @@ LexicalAnalyser::LexicalAnalyser(const std::string& config_file){
         }
         else if(symbols == "separator"){
 
-            for(uint i = 0; i < 128; i++){
+            for(uint i = 0; i < NUM_SYMBOLS; i++){
                 if(!isSeparator( (Symbol)i )) continue;
                 transitions.push_back(current_state);
                 transitions.push_back((uint)i);
@@ -110,18 +86,8 @@ LexicalAnalyser::LexicalAnalyser(const std::string& config_file){
         }
         else if(symbols == "not_separator"){
 
-            for(uint i = 0; i < 128; i++){
+            for(uint i = 0; i < NUM_SYMBOLS; i++){
                 if(isSeparator( (Symbol)i )) continue;
-                transitions.push_back(current_state);
-                transitions.push_back((uint)i);
-                transitions.push_back(next_state);
-            }
-        }
-        else if(symbols == "not_symbol"){
-
-            for(uint i = 0; i < 128; i++){
-                if(isSeparator( (Symbol)i )) continue;
-                if(isOnLexicalAlphabet( (Symbol)i )) continue;
                 transitions.push_back(current_state);
                 transitions.push_back((uint)i);
                 transitions.push_back(next_state);
@@ -137,7 +103,7 @@ LexicalAnalyser::LexicalAnalyser(const std::string& config_file){
     }
     config.close();
 
-    automato_ = new Automato{ num_states, state_type, transitions };
+    automato_ = new Automato{ state_type, transitions };
 }
 
 void LexicalAnalyser::analyse(const std::string& input_file){
@@ -222,26 +188,31 @@ bool LexicalAnalyser::isSeparator( Symbol symbol ){
 
 void LexicalAnalyser::printResult(){
 
-    std::cout << std::setw(12) << std::left << std::setfill('-') << "|";
+    uint space = 12;
+    for( Token t : outputTokeList_)
+        space = std::max(t.token_.size(), space);
+    space += 3;
+
+    std::cout << std::setw( space ) << std::left << std::setfill('-') << "|";
     std::cout << std::setw(22) << std::setfill('-') << "+";
     std::cout << std::setw(7) << std::setfill('-') << "+" << "|" << std::endl;
     std::cout << std::setfill(' ');
-    std::cout << std::setw(12) << std::left << "| TOKEN";
+    std::cout << std::setw( space ) << std::left << "| TOKEN";
     std::cout << std::setw(22) << std::left << "| CLASSIFICATION";
     std::cout << std::setw(7) << std::left << "| LINE" << "|" << std::endl;
-    std::cout << std::setw(12) << std::setfill('-') << "|";
+    std::cout << std::setw( space ) << std::setfill('-') << "|";
     std::cout << std::setw(22) << std::setfill('-') << "+";
     std::cout << std::setw(7) << std::setfill('-') << "+" << "|" << std::endl;
 
     for( Token t : outputTokeList_){
         std::cout << std::setfill(' ');
         std::cout << std::setw(0) << std::left << "| ";
-        std::cout << std::setw(10) << std::left << t.token_;
+        std::cout << std::setw( space-2 ) << std::left << t.token_;
         std::cout << std::setw(0) << std::left << "| ";
         std::cout << std::setw(20) << std::left << token_type_strings_[t.type_];
         std::cout << std::setw(0) << std::left << "| ";
         std::cout << std::setw(5) << std::left << t.line_ << "|" << std::endl;
-        std::cout << std::setw(12) << std::setfill('-') << "|";
+        std::cout << std::setw( space ) << std::setfill('-') << "|";
         std::cout << std::setw(22) << std::setfill('-') << "+";
         std::cout << std::setw(7) << std::setfill('-') << "+" << "|" << std::endl;
     }

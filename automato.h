@@ -1,6 +1,8 @@
 #ifndef AUTOMATO_H_INCLUDED
 #define AUTOMATO_H_INCLUDED
 
+#define NUM_SYMBOLS 256
+
 #include <string>
 #include <vector>
 #include <iostream>
@@ -19,18 +21,13 @@ struct State{
 class Automato{
 
 private:
-    uint num_states_;
-    uint num_symbols_;
-
-    uint start_id_;
     uint current_id_;
     uint **trans_;
     std::vector< State > states_;
 
 public:
 
-    Automato(uint num_states,
-             const std::vector< TokenType >& state_type,
+    Automato(const std::vector< TokenType >& state_type,
              const std::vector< uint >& transitions);
 
     void next_state(Symbol input);
