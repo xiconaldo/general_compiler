@@ -24,7 +24,7 @@
 1502163805 source:c:\users\franc\documents\ufpb\compiladores\projetolexico\lexical_analyser.cpp
 	"lexical_analyser.h"
 
-1502338490 source:c:\users\franc\documents\ufpb\compiladores\lexical_analyser\automato.cpp
+1502338809 source:c:\users\franc\documents\ufpb\compiladores\lexical_analyser\automato.cpp
 	"automato.h"
 
 1502338781 c:\users\franc\documents\ufpb\compiladores\lexical_analyser\automato.h
@@ -32,10 +32,10 @@
 	<vector>
 	<iostream>
 
-1502338532 source:c:\users\franc\documents\ufpb\compiladores\lexical_analyser\lexical_analyser.cpp
+1502399697 source:c:\users\franc\documents\ufpb\compiladores\lexical_analyser\lexical_analyser.cpp
 	"lexical_analyser.h"
 
-1502226085 c:\users\franc\documents\ufpb\compiladores\lexical_analyser\lexical_analyser.h
+1502391723 c:\users\franc\documents\ufpb\compiladores\lexical_analyser\lexical_analyser.h
 	<unordered_set>
 	<unordered_map>
 	<iostream>

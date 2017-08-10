@@ -30,16 +30,20 @@ LexicalAnalyser::LexicalAnalyser(const std::string& config_file){
             std::string type_name;
             std::istringstream(line.substr(3)) >> type_name;
             token_type_strings_.push_back(type_name);
-            if(type_name == "COMMENT")
-                commentTokenType_ = token_type_strings_.size()-1;
+            if(type_name.back() == '*')
+                ignoredTokenType_.insert(token_type_strings_.size()-1);
         }
         else if(line.substr(0, 2) == "#e"){
             error_type_strings_.push_back(line.substr(3));
         }
         else if(line.substr(0, 2) == "#g"){
             TokenType token_type;
-            std::istringstream(line.substr(3)) >> token_type;
-            genericTokenType_.insert(token_type);
+            std::istringstream line_str(line.substr(3));
+
+             while(line_str){
+                line_str >> token_type;
+                genericTokenType_.insert(token_type);
+            }
         }
         else if(line.substr(0, 2) == "#k"){
             std::string token;
@@ -92,6 +96,21 @@ LexicalAnalyser::LexicalAnalyser(const std::string& config_file){
                 transitions.push_back((uint)i);
                 transitions.push_back(next_state);
             }
+        }
+        else if(symbols == "new_line"){
+            transitions.push_back(current_state);
+            transitions.push_back((uint)'\n');
+            transitions.push_back(next_state);
+        }
+        else if(symbols == "tab"){
+            transitions.push_back(current_state);
+            transitions.push_back((uint)'\t');
+            transitions.push_back(next_state);
+        }
+        else if(symbols == "space"){
+            transitions.push_back(current_state);
+            transitions.push_back((uint)' ');
+            transitions.push_back(next_state);
         }
         else{
             for(uint i = 0; i < symbols.size(); i++){
@@ -149,7 +168,7 @@ void LexicalAnalyser::readNextSymbol(){
 
             Token new_token = {currentTokenType_, currentToken, currentTokenLine_};
 
-            if(currentTokenType_ != commentTokenType_)
+            if( !isIgnoredType(currentTokenType_) )
                 outputTokeList_.push_back(new_token);
         }
 
@@ -240,6 +259,12 @@ bool LexicalAnalyser::isSpecial(const std::string& token){
 
 bool LexicalAnalyser::isGenericType(TokenType token_type){
     if(genericTokenType_.find(token_type) != genericTokenType_.end())
+        return true;
+    return false;
+}
+
+bool LexicalAnalyser::isIgnoredType(TokenType token_type){
+    if(ignoredTokenType_.find(token_type) != ignoredTokenType_.end())
         return true;
     return false;
 }

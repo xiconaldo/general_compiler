@@ -44,10 +44,10 @@ private:
     std::vector<uint> alphabet_;
     std::unordered_set<TokenType> genericTokenType_;
     std::unordered_map< std::string, TokenType > special_;
+    std::unordered_set<TokenType> ignoredTokenType_;
 
     TokenType currentTokenType_;
     TokenType insideCommentTokenType_;
-    TokenType commentTokenType_;
     uint currentTokenLine_;
 
     std::vector<std::string> token_type_strings_;
@@ -74,6 +74,8 @@ public:
     bool isSpecial(const std::string& token);
 
     bool isGenericType(TokenType token_type);
+
+    bool isIgnoredType(TokenType token_type);
 };
 
 #endif // LEXICAL_ANALYSER_H_INCLUDED

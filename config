@@ -9,7 +9,7 @@
 #t REL_OPERATOR     --7
 #t ADD_OPERATOR     --8
 #t MUL_OPERATOR     --9
-#t COMMENT          --10
+#t COMMENT*         --10
 
 #e Incomplete comment
 #e Symbol does not belongs to language
@@ -49,8 +49,8 @@
 1 0123456789 1
 2 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789 2
 4 = 5
-7 => 7
-8 = 8
+7 => 6
+8 = 6
 1 . 11
 11 0123456789 12
 12 0123456789 12
