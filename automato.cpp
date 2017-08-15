@@ -18,11 +18,18 @@ Automato::Automato(const std::vector< TokenType >& state_type,
 
     for(uint i = 0; i < num_states; i++)
         trans_[i] = new uint[NUM_SYMBOLS](); // Initializes to zero
-    // https://stackoverflow.com/questions/7546620/operator-new-initializes-memory-to-zero
 
     for(uint i = 0; i < transitions.size(); i += 3)
         trans_[ transitions[i] ][ transitions[i+1] ] = transitions[i+2];
 
+}
+
+Automato::~Automato(){
+
+    for(uint i = 0; i < states_.size(); i++)
+        delete trans_[i];
+
+    delete trans_;
 }
 
 void Automato::next_state(Symbol input){

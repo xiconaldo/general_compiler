@@ -41,13 +41,12 @@ private:
 
     std::vector<Symbol> recent_buffer_;
     std::vector<Symbol> accepted_buffer_;
-    std::vector<uint> alphabet_;
+    std::unordered_set<Symbol> separator_;
     std::unordered_set<TokenType> genericTokenType_;
     std::unordered_map< std::string, TokenType > special_;
     std::unordered_set<TokenType> ignoredTokenType_;
 
     TokenType currentTokenType_;
-    TokenType insideCommentTokenType_;
     uint currentTokenLine_;
 
     std::vector<std::string> token_type_strings_;
@@ -59,11 +58,11 @@ public:
 
     LexicalAnalyser(const std::string& config_file);
 
+    ~LexicalAnalyser();
+
     void analyse(const std::string& input_file);
 
     void readNextSymbol();
-
-    bool isOnLexicalAlphabet( Symbol symbol );
 
     bool isSeparator( Symbol symbol );
 

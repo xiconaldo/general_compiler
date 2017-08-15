@@ -4,6 +4,7 @@ LexicalAnalyser::LexicalAnalyser(const std::string& config_file){
     cursor_pos_ = 0;
     line_pos_ = 1;
     currentTokenType_ = NO_TYPE;
+    currentTokenLine_ = 1;
     token_type_strings_.push_back("NO_TYPE");
     error_type_strings_.push_back("NO_TYPE");
 
@@ -12,25 +13,27 @@ LexicalAnalyser::LexicalAnalyser(const std::string& config_file){
         std::cerr << "Can't open file " << config_file;
     }
 
-    alphabet_.resize(NUM_SYMBOLS);
     std::string line;
     while( getline(config, line) ){
 
         if(line.substr(0, 2) == "#z"){
 
-            uint tmp_num;
+            uint tmp_int;
             std::istringstream sstr_line(line.substr(3));
 
-            while(sstr_line){
-                sstr_line >> tmp_num;
-                alphabet_[ tmp_num ] = 2;
+            while( true ){
+                sstr_line >> tmp_int;
+
+                if(sstr_line)
+                    separator_.insert( (Symbol)tmp_int );
+                else
+                    break;
             }
         }
         else if(line.substr(0, 2) == "#t"){
-            std::string type_name;
-            std::istringstream(line.substr(3)) >> type_name;
-            token_type_strings_.push_back(type_name);
-            if(type_name.back() == '*')
+            token_type_strings_.push_back(line.substr(3));
+
+            if(token_type_strings_.back().back() == '*')
                 ignoredTokenType_.insert(token_type_strings_.size()-1);
         }
         else if(line.substr(0, 2) == "#e"){
@@ -40,9 +43,13 @@ LexicalAnalyser::LexicalAnalyser(const std::string& config_file){
             TokenType token_type;
             std::istringstream line_str(line.substr(3));
 
-             while(line_str){
+             while( true ){
                 line_str >> token_type;
-                genericTokenType_.insert(token_type);
+
+                if(line_str)
+                    genericTokenType_.insert(token_type);
+                else
+                    break;
             }
         }
         else if(line.substr(0, 2) == "#k"){
@@ -59,10 +66,14 @@ LexicalAnalyser::LexicalAnalyser(const std::string& config_file){
 
     getline(config, line);
     {std::istringstream line_stream(line);
-    while(line_stream){
+    while( true ){
         TokenType tmp_int;
         line_stream >> tmp_int;
-        state_type.push_back(tmp_int);
+
+        if(line_stream)
+            state_type.push_back(tmp_int);
+        else
+            break;
     }}
 
     while( getline(config, line) ){
@@ -125,6 +136,11 @@ LexicalAnalyser::LexicalAnalyser(const std::string& config_file){
     automato_ = new Automato{ state_type, transitions };
 }
 
+LexicalAnalyser::~LexicalAnalyser(){
+    delete automato_;
+}
+
+
 void LexicalAnalyser::analyse(const std::string& input_file){
 
     std::ifstream input(input_file);
@@ -139,7 +155,7 @@ void LexicalAnalyser::analyse(const std::string& input_file){
             readNextSymbol();
 
         if(!automato_->isCurrentFinal())
-            throw LexicalErrorException(currentTokenLine_, error_type_strings_[-automato_->current().type_]);
+            throw LexicalErrorException(currentTokenLine_, error_type_strings_[-automato_->currentType()]);
     }
     catch (LexicalErrorException err){
         std::ostringstream ss;
@@ -197,12 +213,10 @@ void LexicalAnalyser::readNextSymbol(){
     cursor_pos_++;
 }
 
-bool LexicalAnalyser::isOnLexicalAlphabet( Symbol symbol ){
-    return alphabet_[symbol] == 1;
-}
-
 bool LexicalAnalyser::isSeparator( Symbol symbol ){
-    return alphabet_[symbol] == 2;
+    if(separator_.find(symbol) != separator_.end())
+        return true;
+    return false;
 }
 
 void LexicalAnalyser::printResult(){

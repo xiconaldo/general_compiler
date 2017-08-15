@@ -11,6 +11,7 @@
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
+				<Option parameters="config code" />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
@@ -20,6 +21,7 @@
 				<Option object_output="obj/Release/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
+				<Option parameters="config code" />
 				<Compiler>
 					<Add option="-O2" />
 				</Compiler>
@@ -38,6 +40,9 @@
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
 		<Unit filename="config">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="config_real">
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
 		<Unit filename="lexical_analyser.cpp" />

@@ -1,8 +1,6 @@
 #ifndef AUTOMATO_H_INCLUDED
 #define AUTOMATO_H_INCLUDED
 
-#define NUM_SYMBOLS 256
-
 #include <string>
 #include <vector>
 #include <iostream>
@@ -11,7 +9,7 @@ typedef unsigned char Symbol;
 typedef unsigned int uint;
 typedef int TokenType;
 
-enum{ NO_TYPE};
+enum{ NO_TYPE, NUM_SYMBOLS = 256};
 
 struct State{
     uint id_;
@@ -25,10 +23,16 @@ private:
     uint **trans_;
     std::vector< State > states_;
 
+    State& current();
+
+    State& start();
+
 public:
 
     Automato(const std::vector< TokenType >& state_type,
              const std::vector< uint >& transitions);
+
+    ~Automato();
 
     void next_state(Symbol input);
 
@@ -37,10 +41,6 @@ public:
     bool isCurrentStart();
 
     TokenType currentType();
-
-    State& current();
-
-    State& start();
 
 };
 

@@ -1,15 +1,15 @@
 #z 8 9 10 13 32
 
-#t KEYWORD          --1
-#t IDENTIFIER       --2
-#t INTEGER_NUMBER   --3
-#t REAL_NUMBER      --4
-#t DELIMITER        --5
-#t ASSIGNMENT       --6
-#t REL_OPERATOR     --7
-#t ADD_OPERATOR     --8
-#t MUL_OPERATOR     --9
-#t COMMENT*         --10
+#t KEYWORD
+#t IDENTIFIER
+#t INTEGER_NUMBER
+#t REAL_NUMBER
+#t DELIMITER
+#t ASSIGNMENT
+#t REL_OPERATOR
+#t ADD_OPERATOR
+#t MUL_OPERATOR
+#t COMMENT*
 
 #e Incomplete comment
 #e Symbol does not belongs to language
@@ -33,13 +33,13 @@
 #k and 9
 
 #s
-0 3 2 5 5 6 7 7 7 8 9 4 4 -1 10 -2
+0 3 2 5 5 6 7 7 7 8 9 -3 4 -1 10 -2
 
 0 all 15
 0 separator 0
 0 0123456789 1
 0 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ 2
-0 ;(),. 3
+0 ;.(), 3
 0 : 4
 0 = 6
 0 < 7
