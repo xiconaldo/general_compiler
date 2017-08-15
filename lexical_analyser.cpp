@@ -223,7 +223,7 @@ void LexicalAnalyser::printResult(){
 
     uint space = 12;
     for( Token t : outputTokeList_)
-        space = std::max(t.token_.size(), space);
+        space = std::max( (uint)t.token_.size(), space);
     space += 3;
 
     std::cout << std::setw( space ) << std::left << std::setfill('-') << "|";
