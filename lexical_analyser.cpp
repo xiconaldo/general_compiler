@@ -4,7 +4,7 @@ LexicalAnalyser::LexicalAnalyser(const std::string& config_file){
     cursor_pos_ = 0;
     line_pos_ = 1;
     currentTokenType_ = NO_TYPE;
-    currentTokenLine_ = 1;
+    currentErrorLine_ = currentTokenLine_ = 1;
     token_type_strings_.push_back("NO_TYPE");
     error_type_strings_.push_back("NO_TYPE");
 
@@ -155,7 +155,7 @@ void LexicalAnalyser::analyse(const std::string& input_file){
             readNextSymbol();
 
         if(!automato_->isCurrentFinal())
-            throw LexicalErrorException(currentTokenLine_, error_type_strings_[-automato_->currentType()]);
+            throw LexicalErrorException(currentErrorLine_, error_type_strings_[-automato_->currentType()]);
     }
     catch (LexicalErrorException err){
         std::ostringstream ss;
@@ -183,6 +183,8 @@ void LexicalAnalyser::readNextSymbol(){
                 currentTokenType_ = special_[currentToken];
 
             Token new_token = {currentTokenType_, currentToken, currentTokenLine_};
+
+            currentErrorLine_ = currentTokenLine_ + (input_[cursor_pos_] == NEW_LINE);
 
             if( !isIgnoredType(currentTokenType_) )
                 outputTokeList_.push_back(new_token);

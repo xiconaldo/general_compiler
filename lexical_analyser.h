@@ -48,6 +48,7 @@ private:
 
     TokenType currentTokenType_;
     uint currentTokenLine_;
+    uint currentErrorLine_;
 
     std::vector<std::string> token_type_strings_;
     std::vector<std::string> error_type_strings_;
