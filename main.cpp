@@ -10,6 +10,7 @@ int main(int argc, char* argv[])
     lex.analyse( std::string{argv[3]} );
 	const std::vector< Token > tokens = lex.getTokenList();
 	sint.analyse(tokens);
+	sint.printErrors();
 
     return 0;
 }

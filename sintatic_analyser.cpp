@@ -56,16 +56,18 @@ void SintaticAnalyser::analyse(const std::vector< Token >& token_input){
 		expandNonTerminal(-1);
 	}
 	catch( SintaticErrorException err ){
-		std::cerr << "At rule " << err.line_ << ": " << err.description_ << std::endl;
+		std::ostringstream ss;
+        ss << "Sintatical error at line " << err.line_ << ": " << err.description_;
+        error_info_.push_back(ss.str());
 	}
 }
 
 void SintaticAnalyser::expandNonTerminal(int non_terminal_id){
 	int rule_id = checkMatchRule(non_terminal_id);
 
-	std::cerr << rule_id+2 << " ";
+	//std::cerr << rule_id+2 << " ";
 
-	if(rule_id < 0) throw SintaticErrorException(non_terminal_id, currentToken.token_);
+	if(rule_id < 0) throw SintaticErrorException(currentToken.line_, std::to_string(non_terminal_id));
 
 	std::vector< Token > current_rule = rules_def_[rule_id];
 
@@ -106,5 +108,16 @@ void SintaticAnalyser::nextToken(){
 	if(cursor_pos_ < token_input_.size())
 		currentToken = token_input_[cursor_pos_++];
 
-	std::cerr << std::endl << std::endl << token_input_[cursor_pos_-1].token_ << std::endl;
+	//std::cerr << std::endl << std::endl << token_input_[cursor_pos_-1].token_ << std::endl;
+}
+
+void SintaticAnalyser::printErrors(){
+    if(error_info_.empty()){
+        std::cout << "ANALYSIS COMPLETED SUCCESSFULLY" << std::endl;
+    }
+    else{
+        std::cout << "ANALYSIS FAILED:" << std::endl;
+        for( std::string err : error_info_)
+            std::cout << err << std::endl;
+    }
 }

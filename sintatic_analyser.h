@@ -9,7 +9,7 @@
 #include <sstream>
 
 struct SintaticErrorException{
-    int line_;
+    uint line_;
     std::string description_;
 
     SintaticErrorException(uint line, const std::string& description) :
@@ -27,6 +27,7 @@ private:
 
 	std::vector< std::vector< uint > > rules_id_;
 	std::vector< std::vector< Token > > rules_def_;
+	std::vector< std::string > error_info_;
 
 	std::vector< std::vector< Token > > terminals_;
 
@@ -41,6 +42,8 @@ public:
 	int checkMatchRule(int non_terminal_id);
 
 	void nextToken();
+
+    void printErrors();
 
 };
 
