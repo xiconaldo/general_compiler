@@ -39,9 +39,13 @@ public:
 
 	void expandNonTerminal(int non_terminal_id);
 
-	int checkMatchRule(int non_terminal_id);
+	int checkForRuleMatch(int non_terminal_id);
+
+	int matchRule(int non_terminal_id);
 
 	void nextToken();
+
+	void checkForEarlyEndOfFile();
 
     void printErrors();
 

@@ -1,7 +1,7 @@
 #include "sintatic_analyser.h"
 
 SintaticAnalyser::SintaticAnalyser(const std::string& config_file){
-	// Construct grammar table
+
 	cursor_pos_ = 0;
 
 	std::ifstream config{ config_file };
@@ -48,9 +48,9 @@ SintaticAnalyser::SintaticAnalyser(const std::string& config_file){
 }
 
 void SintaticAnalyser::analyse(const std::vector< Token >& token_input){
-	// Create optimization table
+
 	token_input_ = token_input;
-	nextToken();
+	currentToken = token_input_[cursor_pos_];
 
 	try{
 		expandNonTerminal(-1);
@@ -63,15 +63,12 @@ void SintaticAnalyser::analyse(const std::vector< Token >& token_input){
 }
 
 void SintaticAnalyser::expandNonTerminal(int non_terminal_id){
-	int rule_id = checkMatchRule(non_terminal_id);
 
-	//std::cerr << rule_id+2 << " ";
-
-	if(rule_id < 0) throw SintaticErrorException(currentToken.line_, std::to_string(non_terminal_id));
-
-	std::vector< Token > current_rule = rules_def_[rule_id];
+	std::vector< Token > current_rule = rules_def_[ checkForRuleMatch(non_terminal_id) ];
 
 	for(uint i = 0; i < current_rule.size(); i++){
+
+		checkForEarlyEndOfFile();
 
 		if( current_rule[i].type_ > 0 && current_rule[i].type_ == currentToken.type_ ||
 			current_rule[i].type_ == 0 && current_rule[i].token_ == currentToken.token_ )
@@ -84,11 +81,23 @@ void SintaticAnalyser::expandNonTerminal(int non_terminal_id){
 			continue;
 
 		else
-			throw SintaticErrorException(currentToken.line_, currentToken.token_);
+			throw SintaticErrorException(currentToken.line_, "ERRO -2");
 	}
 }
 
-int SintaticAnalyser::checkMatchRule(int non_terminal_id){
+int SintaticAnalyser::checkForRuleMatch(int non_terminal_id){
+
+	int rule_id = matchRule(non_terminal_id);
+
+	if(rule_id >= 0)
+		return rule_id;
+	else
+		throw SintaticErrorException(currentToken.line_, "ERRO -1");
+
+
+}
+
+int SintaticAnalyser::matchRule(int non_terminal_id){
 
 	for( uint i = 0; i < rules_id_[-non_terminal_id].size(); i++){
 
@@ -97,7 +106,7 @@ int SintaticAnalyser::checkMatchRule(int non_terminal_id){
 
 		if( rule_init.type_ > 0 && rule_init.type_ == currentToken.type_ ||
 			rule_init.type_ == 0 && rule_init.token_ == currentToken.token_ ||
-			rule_init.type_ < 0 && checkMatchRule( rule_init.type_ ) >= 0 ||
+			rule_init.type_ < 0 && matchRule( rule_init.type_ ) >= 0 ||
 			rule_init.type_ == 0 && rule_init.token_.empty() )
 			return rule_id;
 	}
@@ -105,10 +114,14 @@ int SintaticAnalyser::checkMatchRule(int non_terminal_id){
 }
 
 void SintaticAnalyser::nextToken(){
-	if(cursor_pos_ < token_input_.size())
-		currentToken = token_input_[cursor_pos_++];
 
-	//std::cerr << std::endl << std::endl << token_input_[cursor_pos_-1].token_ << std::endl;
+	if(++cursor_pos_ < token_input_.size())
+		currentToken = token_input_[cursor_pos_];
+}
+
+void SintaticAnalyser::checkForEarlyEndOfFile(){
+	if( cursor_pos_ == token_input_.size() )
+		throw SintaticErrorException(currentToken.line_, "Early end of file");
 }
 
 void SintaticAnalyser::printErrors(){
