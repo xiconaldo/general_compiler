@@ -47,7 +47,9 @@ public:
 
 	void checkForEarlyEndOfFile();
 
-    void printErrors();
+    void printResults();
+
+	bool success();
 
 };
 

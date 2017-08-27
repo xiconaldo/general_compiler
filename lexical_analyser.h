@@ -70,9 +70,11 @@ public:
 
     bool isIgnoredType(TokenType token_type);
 
-	void printResult();
+	void printGeneratedTable();
 
-    void printErrors();
+    void printResults();
+
+	bool success();
 };
 
 #endif // LEXICAL_ANALYSER_H_INCLUDED

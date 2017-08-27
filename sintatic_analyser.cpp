@@ -49,15 +49,20 @@ SintaticAnalyser::SintaticAnalyser(const std::string& config_file){
 
 void SintaticAnalyser::analyse(const std::vector< Token >& token_input){
 
+	error_info_.clear();
+
 	token_input_ = token_input;
 	currentToken = token_input_[cursor_pos_];
 
 	try{
 		expandNonTerminal(-1);
+
+		if( cursor_pos_ < token_input_.size() )
+			throw SintaticErrorException(currentToken.line_, "Unexpected symbols at end of file");
 	}
 	catch( SintaticErrorException err ){
 		std::ostringstream ss;
-        ss << "Sintatical error at line " << err.line_ << ": " << err.description_;
+        ss << "At line " << err.line_ << ": " << err.description_;
         error_info_.push_back(ss.str());
 	}
 }
@@ -81,7 +86,7 @@ void SintaticAnalyser::expandNonTerminal(int non_terminal_id){
 			continue;
 
 		else
-			throw SintaticErrorException(currentToken.line_, "ERRO -2");
+			throw SintaticErrorException(currentToken.line_, "Incorrect token");
 	}
 }
 
@@ -92,7 +97,7 @@ int SintaticAnalyser::checkForRuleMatch(int non_terminal_id){
 	if(rule_id >= 0)
 		return rule_id;
 	else
-		throw SintaticErrorException(currentToken.line_, "ERRO -1");
+		throw SintaticErrorException(currentToken.line_, "No match rule for token");
 
 
 }
@@ -121,16 +126,17 @@ void SintaticAnalyser::nextToken(){
 
 void SintaticAnalyser::checkForEarlyEndOfFile(){
 	if( cursor_pos_ == token_input_.size() )
-		throw SintaticErrorException(currentToken.line_, "Early end of file");
+		throw SintaticErrorException(currentToken.line_, "Unexpected end of file");
 }
 
-void SintaticAnalyser::printErrors(){
-    if(error_info_.empty()){
-        std::cout << "ANALYSIS COMPLETED SUCCESSFULLY" << std::endl;
-    }
-    else{
-        std::cout << "ANALYSIS FAILED:" << std::endl;
+void SintaticAnalyser::printResults(){
+    if( !error_info_.empty() ){
+        std::cout << "Sintatic error(s) detected:" << std::endl;
         for( std::string err : error_info_)
             std::cout << err << std::endl;
     }
+}
+
+bool SintaticAnalyser::success(){
+	return error_info_.empty();
 }

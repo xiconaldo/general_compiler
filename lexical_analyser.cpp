@@ -143,6 +143,8 @@ LexicalAnalyser::~LexicalAnalyser(){
 
 void LexicalAnalyser::analyse(const std::string& input_file){
 
+	error_info_.clear();
+
     std::ifstream input(input_file);
 
     std::stringstream sstr;
@@ -159,7 +161,7 @@ void LexicalAnalyser::analyse(const std::string& input_file){
     }
     catch (LexicalErrorException err){
         std::ostringstream ss;
-        ss << "Error at line " << err.line_ << ": " << err.description_;
+        ss << "At line " << err.line_ << ": " << err.description_;
         error_info_.push_back(ss.str());
     }
 
@@ -243,7 +245,7 @@ bool LexicalAnalyser::isIgnoredType(TokenType token_type){
     return false;
 }
 
-void LexicalAnalyser::printResult(){
+void LexicalAnalyser::printGeneratedTable(){
 
     uint space = 12;
     for( Token t : outputTokeList_)
@@ -275,16 +277,16 @@ void LexicalAnalyser::printResult(){
     }
 
     std::cout << std::endl;
-    printErrors();
 }
 
-void LexicalAnalyser::printErrors(){
-    if(error_info_.empty()){
-        std::cout << "ANALYSIS COMPLETED SUCCESSFULLY" << std::endl;
-    }
-    else{
-        std::cout << "ANALYSIS FAILED:" << std::endl;
+void LexicalAnalyser::printResults(){
+	if( !error_info_.empty() ){
+        std::cout << "Lexical error(s) detected:" << std::endl;
         for( std::string err : error_info_)
             std::cout << err << std::endl;
     }
+}
+
+bool LexicalAnalyser::success(){
+	return error_info_.empty();
 }

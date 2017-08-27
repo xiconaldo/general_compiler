@@ -2,6 +2,6 @@ program teste; {programa exemplo}
 var
 valor1: integer;
 valor2: real;
-begin
+begin#
 valor1 := 10
-end.
+end
