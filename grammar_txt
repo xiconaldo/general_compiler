@@ -1,0 +1,62 @@
+
+A -> program IDENTIFIER ; B F J .
+B -> var C
+B ->
+C -> D : E ; C#
+C# -> D : E ; C#
+C# ->
+D -> IDENTIFIER D#
+D# -> , IDENTIFIER D#
+D# ->
+E -> integer
+E -> real
+E -> boolean
+F -> F#
+F# -> G ; F#
+F# ->
+G -> procedure IDENTIFIER H ; B F J
+H -> ( I )
+H ->
+I -> D : E I#
+I# -> ; D : E I#
+I# ->
+J -> begin K end
+K -> L
+K ->
+L -> M L#
+L# -> ; M L#
+L# ->
+M -> IDENTIFIER M#
+M -> J
+M -> if R then M N
+M -> while R do M
+M# -> := R
+M# -> P#
+N -> else M
+N ->
+P# -> ( Q )
+P# ->
+Q -> R Q#
+Q# -> , R Q#
+Q# ->
+R -> S R#
+R# -> REL_OP S
+R# ->
+S -> T S#
+S -> V T S#
+S# -> ADD_OP T S#
+S# ->
+T -> U T#
+T# -> MUL_OP U T#
+T# ->
+U -> IDENTIFIER U#
+U -> INTEGER_NUM
+U -> REAL_NUM
+U -> true
+U -> false
+U -> ( R )
+U -> not U
+U# -> ( Q )
+U# ->
+V -> +
+V -> -

@@ -1,13 +1,15 @@
 #include <iostream>
 #include "lexical_analyser.h"
+#include "sintatic_analyser.h"
 
 int main(int argc, char* argv[])
 {
     LexicalAnalyser lex( std::string{argv[1]} );
-    lex.analyse( std::string{argv[2]} );
-    lex.printResult();
+	SintaticAnalyser sint( std::string{argv[2]} );
 
-    float x = 5.;
+    lex.analyse( std::string{argv[3]} );
+	const std::vector< Token > tokens = lex.getTokenList();
+	sint.analyse(tokens);
 
     return 0;
 }

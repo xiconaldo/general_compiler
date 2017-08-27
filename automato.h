@@ -4,12 +4,11 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include "token.h"
 
 typedef unsigned char Symbol;
-typedef unsigned int uint;
-typedef int TokenType;
 
-enum{ NO_TYPE, NUM_SYMBOLS = 256};
+enum{NUM_SYMBOLS = 256};
 
 struct State{
     uint id_;

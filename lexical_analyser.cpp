@@ -215,8 +215,30 @@ void LexicalAnalyser::readNextSymbol(){
     cursor_pos_++;
 }
 
+const std::vector< Token >& LexicalAnalyser::getTokenList(){
+	return outputTokeList_;
+}
+
 bool LexicalAnalyser::isSeparator( Symbol symbol ){
     if(separator_.find(symbol) != separator_.end())
+        return true;
+    return false;
+}
+
+bool LexicalAnalyser::isSpecial(const std::string& token){
+    if(special_.find(token) != special_.end())
+        return true;
+    return false;
+}
+
+bool LexicalAnalyser::isGenericType(TokenType token_type){
+    if(genericTokenType_.find(token_type) != genericTokenType_.end())
+        return true;
+    return false;
+}
+
+bool LexicalAnalyser::isIgnoredType(TokenType token_type){
+    if(ignoredTokenType_.find(token_type) != ignoredTokenType_.end())
         return true;
     return false;
 }
@@ -265,22 +287,4 @@ void LexicalAnalyser::printErrors(){
         for( std::string err : error_info_)
             std::cout << err << std::endl;
     }
-}
-
-bool LexicalAnalyser::isSpecial(const std::string& token){
-    if(special_.find(token) != special_.end())
-        return true;
-    return false;
-}
-
-bool LexicalAnalyser::isGenericType(TokenType token_type){
-    if(genericTokenType_.find(token_type) != genericTokenType_.end())
-        return true;
-    return false;
-}
-
-bool LexicalAnalyser::isIgnoredType(TokenType token_type){
-    if(ignoredTokenType_.find(token_type) != ignoredTokenType_.end())
-        return true;
-    return false;
 }

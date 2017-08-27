@@ -12,12 +12,7 @@
 #include <iomanip>
 
 #include "automato.h"
-
-struct Token{
-    TokenType type_;
-    std::string token_;
-    uint line_;
-};
+#include "token.h"
 
 struct LexicalErrorException{
     uint line_;
@@ -65,17 +60,19 @@ public:
 
     void readNextSymbol();
 
-    bool isSeparator( Symbol symbol );
+	const std::vector< Token >& getTokenList();
 
-    void printResult();
-
-    void printErrors();
+	bool isSeparator( Symbol symbol );
 
     bool isSpecial(const std::string& token);
 
     bool isGenericType(TokenType token_type);
 
     bool isIgnoredType(TokenType token_type);
+
+	void printResult();
+
+    void printErrors();
 };
 
 #endif // LEXICAL_ANALYSER_H_INCLUDED
