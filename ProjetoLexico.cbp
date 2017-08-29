@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="ProjetoLexico" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/ProjetoLexico" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option parameters="config code" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/ProjetoLexico" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option parameters="config grammar code" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-fexceptions" />
+		</Compiler>
+		<Unit filename="automato.cpp" />
+		<Unit filename="automato.h" />
+		<Unit filename="code" />
+		<Unit filename="compiler.cpp" />
+		<Unit filename="compiler.h" />
+		<Unit filename="config" />
+		<Unit filename="grammar" />
+		<Unit filename="grammar_txt" />
+		<Unit filename="lexical_analyser.cpp" />
+		<Unit filename="lexical_analyser.h" />
+		<Unit filename="main.cpp" />
+		<Unit filename="sintatic_analyser.cpp" />
+		<Unit filename="sintatic_analyser.h" />
+		<Unit filename="token.h" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

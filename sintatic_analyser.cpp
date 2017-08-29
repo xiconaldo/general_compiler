@@ -5,11 +5,11 @@ SintaticAnalyser::SintaticAnalyser(const std::string& config_file){
 	cursor_pos_ = 0;
 
 	std::ifstream config{ config_file };
-    if(!config.is_open()){
-        std::cerr << "Can't open file " << config_file;
-    }
+	if(!config.is_open()){
+		std::cerr << "Can't open file " << config_file;
+	}
 
-    std::string line;
+	std::string line;
 	int non_terminal_id;
 	int non_terminal_count;
 
@@ -17,7 +17,7 @@ SintaticAnalyser::SintaticAnalyser(const std::string& config_file){
 	std::istringstream(line) >> non_terminal_count;
 	rules_id_.resize(non_terminal_count+1);
 
-    while( getline(config, line) ){
+	while( getline(config, line) ){
 		std::istringstream line_stream(line);
 
 		line_stream >> non_terminal_id;
@@ -50,6 +50,7 @@ SintaticAnalyser::SintaticAnalyser(const std::string& config_file){
 void SintaticAnalyser::analyse(const std::vector< Token >& token_input){
 
 	error_info_.clear();
+	cursor_pos_ = 0;
 
 	token_input_ = token_input;
 	currentToken = token_input_[cursor_pos_];
@@ -62,8 +63,8 @@ void SintaticAnalyser::analyse(const std::vector< Token >& token_input){
 	}
 	catch( SintaticErrorException err ){
 		std::ostringstream ss;
-        ss << "At line " << err.line_ << ": " << err.description_;
-        error_info_.push_back(ss.str());
+		ss << "At line " << err.line_ << ": " << err.description_;
+		error_info_.push_back(ss.str());
 	}
 }
 
@@ -86,7 +87,7 @@ void SintaticAnalyser::expandNonTerminal(int non_terminal_id){
 			continue;
 
 		else
-			throw SintaticErrorException(currentToken.line_, "Incorrect token");
+			throw SintaticErrorException(currentToken.line_, "No match rule for token");
 	}
 }
 
@@ -130,11 +131,11 @@ void SintaticAnalyser::checkForEarlyEndOfFile(){
 }
 
 void SintaticAnalyser::printResults(){
-    if( !error_info_.empty() ){
-        std::cout << "Sintatic error(s) detected:" << std::endl;
-        for( std::string err : error_info_)
-            std::cout << err << std::endl;
-    }
+	if( !error_info_.empty() ){
+		std::cout << "Sintatic error(s) detected:" << std::endl;
+		for( std::string err : error_info_)
+			std::cout << err << std::endl;
+	}
 }
 
 bool SintaticAnalyser::success(){

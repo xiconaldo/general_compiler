@@ -1,0 +1,99 @@
+# depslib dependency file v1.0
+1502158970 source:c:\users\franc\documents\ufpb\compiladores\projetolexico\automato.cpp
+	"automato.h"
+
+1502157844 c:\users\franc\documents\ufpb\compiladores\projetolexico\automato.h
+	<string>
+	<vector>
+	<iostream>
+
+1502134962 source:c:\users\franc\documents\ufpb\compiladores\projetolexico\main.cpp
+	<iostream>
+	"lexical_analyser.h"
+
+1502205505 c:\users\franc\documents\ufpb\compiladores\projetolexico\lexical_analyser.h
+	<unordered_set>
+	<unordered_map>
+	<iostream>
+	<fstream>
+	<string>
+	<sstream>
+	<iomanip>
+	"automato.h"
+
+1502163805 source:c:\users\franc\documents\ufpb\compiladores\projetolexico\lexical_analyser.cpp
+	"lexical_analyser.h"
+
+1502747188 source:c:\users\franc\documents\ufpb\compiladores\lexical_analyser\automato.cpp
+	"automato.h"
+
+1502747096 c:\users\franc\documents\ufpb\compiladores\lexical_analyser\automato.h
+	<string>
+	<vector>
+	<iostream>
+
+1502770863 source:c:\users\franc\documents\ufpb\compiladores\lexical_analyser\lexical_analyser.cpp
+	"lexical_analyser.h"
+
+1502770596 c:\users\franc\documents\ufpb\compiladores\lexical_analyser\lexical_analyser.h
+	<unordered_set>
+	<unordered_map>
+	<iostream>
+	<fstream>
+	<string>
+	<sstream>
+	<iomanip>
+	"automato.h"
+
+1502751445 source:c:\users\franc\documents\ufpb\compiladores\lexical_analyser\main.cpp
+	<iostream>
+	"lexical_analyser.h"
+
+1503945522 source:c:\users\franc\documents\ufpb\compiladores\general_compiler\automato.cpp
+	"automato.h"
+
+1503945522 c:\users\franc\documents\ufpb\compiladores\general_compiler\automato.h
+	<string>
+	<vector>
+	<iostream>
+	"token.h"
+
+1503945522 c:\users\franc\documents\ufpb\compiladores\general_compiler\token.h
+	<string>
+
+1503945522 source:c:\users\franc\documents\ufpb\compiladores\general_compiler\compiler.cpp
+	"compiler.h"
+
+1503945522 c:\users\franc\documents\ufpb\compiladores\general_compiler\compiler.h
+	"lexical_analyser.h"
+	"sintatic_analyser.h"
+
+1503945522 c:\users\franc\documents\ufpb\compiladores\general_compiler\lexical_analyser.h
+	<unordered_set>
+	<unordered_map>
+	<iostream>
+	<fstream>
+	<string>
+	<sstream>
+	<iomanip>
+	"automato.h"
+	"token.h"
+
+1503962391 c:\users\franc\documents\ufpb\compiladores\general_compiler\sintatic_analyser.h
+	"token.h"
+	<vector>
+	<iostream>
+	<fstream>
+	<string>
+	<sstream>
+
+1503945522 source:c:\users\franc\documents\ufpb\compiladores\general_compiler\lexical_analyser.cpp
+	"lexical_analyser.h"
+
+1503945522 source:c:\users\franc\documents\ufpb\compiladores\general_compiler\main.cpp
+	<iostream>
+	"compiler.h"
+
+1503964042 source:c:\users\franc\documents\ufpb\compiladores\general_compiler\sintatic_analyser.cpp
+	"sintatic_analyser.h"
+

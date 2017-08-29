@@ -29,8 +29,6 @@ private:
 	std::vector< std::vector< Token > > rules_def_;
 	std::vector< std::string > error_info_;
 
-	std::vector< std::vector< Token > > terminals_;
-
 public:
 
 	SintaticAnalyser(const std::string& config_file);
