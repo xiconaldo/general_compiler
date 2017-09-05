@@ -1,12 +1,31 @@
-program teste; {programa exemplo}
+program kask ;
 var
-valor1: integer;
-valor2: real;
+    voto, vBranco, cd1, cd2, vNulo, total:integer;
 begin
-valor1 := 10;
-valor1 := 10;
-valor1 := 10;
-valor1 := 10;
-valor1 := 10;
-valor1 := 10
+
+    writeln;
+    writeln;
+
+    readln(voto);
+
+    if voto = 1 then
+        cd1:= cd1 + 1
+    else
+        if voto = 2 then
+            cd1:= cd1 + 1
+        else
+            if voto = 3 then
+                vBranco:= vBranco + 1
+            else
+                vNulo:= vNulo + 1;
+
+    if cd1 > cd2 then
+    begin
+        writeln
+    end
+    else
+    begin
+        writelns
+    end
+
 end.

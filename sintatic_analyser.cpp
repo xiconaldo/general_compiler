@@ -3,6 +3,7 @@
 SintaticAnalyser::SintaticAnalyser(const std::string& config_file){
 
 	cursor_pos_ = 0;
+	token_type_strings_.push_back("NO_TYPE");
 
 	std::ifstream config{ config_file };
 	if(!config.is_open()){
@@ -13,9 +14,17 @@ SintaticAnalyser::SintaticAnalyser(const std::string& config_file){
 	int non_terminal_id;
 	int non_terminal_count;
 
-	getline(config, line);
-	std::istringstream(line) >> non_terminal_count;
-	rules_id_.resize(non_terminal_count+1);
+    while( getline(config, line) ){
+        if(line.substr(0, 2) == "#t"){
+            token_type_strings_.push_back(line.substr(3));
+		}
+
+        else if(line.substr(0, 2) == "#g"){
+			std::istringstream(line.substr(3)) >> non_terminal_count;
+			rules_id_.resize(non_terminal_count+1);
+			break;
+		}
+    }
 
 	while( getline(config, line) ){
 		std::istringstream line_stream(line);
@@ -70,7 +79,8 @@ void SintaticAnalyser::analyse(const std::vector< Token >& token_input){
 
 void SintaticAnalyser::expandNonTerminal(int non_terminal_id){
 
-	std::vector< Token > current_rule = rules_def_[ checkForRuleMatch(non_terminal_id) ];
+	int rule_id = checkForRuleMatch(non_terminal_id);
+	std::vector< Token > current_rule = rules_def_[ rule_id < 0 ? -rule_id-1 : rule_id ];
 
 	for(uint i = 0; i < current_rule.size(); i++){
 
@@ -86,24 +96,21 @@ void SintaticAnalyser::expandNonTerminal(int non_terminal_id){
 		else if( current_rule[i].type_ == 0 && current_rule[i].token_.empty() )
 			continue;
 
-		else
-			throw SintaticErrorException(currentToken.line_, "No match rule for token");
+		else{
+			std::ostringstream msg;
+
+			msg << "\""
+				<< (current_rule[i].type_ ? token_type_strings_[current_rule[i].type_] : current_rule[i].token_)
+				<< "\" expected but \""
+				<< (currentToken.type_ ? token_type_strings_[currentToken.type_] : currentToken.token_)
+				<< "\" found";
+
+			throw SintaticErrorException(currentToken.line_, msg.str());
+		}
 	}
 }
 
 int SintaticAnalyser::checkForRuleMatch(int non_terminal_id){
-
-	int rule_id = matchRule(non_terminal_id);
-
-	if(rule_id >= 0)
-		return rule_id;
-	else
-		throw SintaticErrorException(currentToken.line_, "No match rule for token");
-
-
-}
-
-int SintaticAnalyser::matchRule(int non_terminal_id){
 
 	for( uint i = 0; i < rules_id_[-non_terminal_id].size(); i++){
 
@@ -112,11 +119,11 @@ int SintaticAnalyser::matchRule(int non_terminal_id){
 
 		if( rule_init.type_ > 0 && rule_init.type_ == currentToken.type_ ||
 			rule_init.type_ == 0 && rule_init.token_ == currentToken.token_ ||
-			rule_init.type_ < 0 && matchRule( rule_init.type_ ) >= 0 ||
+			rule_init.type_ < 0 && checkForRuleMatch( rule_init.type_ ) >= 0 ||
 			rule_init.type_ == 0 && rule_init.token_.empty() )
 			return rule_id;
 	}
-	return -1;
+	return -rules_id_[-non_terminal_id][0]-1;
 }
 
 void SintaticAnalyser::nextToken(){

@@ -7,6 +7,7 @@
 #include <fstream>
 #include <string>
 #include <sstream>
+#include <cmath>
 
 struct SintaticErrorException{
     uint line_;
@@ -27,6 +28,7 @@ private:
 
 	std::vector< std::vector< uint > > rules_id_;
 	std::vector< std::vector< Token > > rules_def_;
+    std::vector<std::string> token_type_strings_;
 	std::vector< std::string > error_info_;
 
 public:
@@ -38,8 +40,6 @@ public:
 	void expandNonTerminal(int non_terminal_id);
 
 	int checkForRuleMatch(int non_terminal_id);
-
-	int matchRule(int non_terminal_id);
 
 	void nextToken();
 

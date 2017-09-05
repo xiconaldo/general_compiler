@@ -79,13 +79,14 @@
 	"automato.h"
 	"token.h"
 
-1503962391 c:\users\franc\documents\ufpb\compiladores\general_compiler\sintatic_analyser.h
+1504627944 c:\users\franc\documents\ufpb\compiladores\general_compiler\sintatic_analyser.h
 	"token.h"
 	<vector>
 	<iostream>
 	<fstream>
 	<string>
 	<sstream>
+	<cmath>
 
 1503945522 source:c:\users\franc\documents\ufpb\compiladores\general_compiler\lexical_analyser.cpp
 	"lexical_analyser.h"
@@ -94,6 +95,6 @@
 	<iostream>
 	"compiler.h"
 
-1503964042 source:c:\users\franc\documents\ufpb\compiladores\general_compiler\sintatic_analyser.cpp
+1504627498 source:c:\users\franc\documents\ufpb\compiladores\general_compiler\sintatic_analyser.cpp
 	"sintatic_analyser.h"
 
