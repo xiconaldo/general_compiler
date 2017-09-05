@@ -1,4 +1,7 @@
-program kask ;
+program kask;
+begin
+end.
+{program kask ;
 var
     voto, vBranco, cd1, cd2, vNulo, total:integer;
 begin
@@ -29,3 +32,4 @@ begin
     end
 
 end.
+}

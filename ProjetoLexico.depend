@@ -61,7 +61,7 @@
 1503945522 c:\users\franc\documents\ufpb\compiladores\general_compiler\token.h
 	<string>
 
-1503945522 source:c:\users\franc\documents\ufpb\compiladores\general_compiler\compiler.cpp
+1504633704 source:c:\users\franc\documents\ufpb\compiladores\general_compiler\compiler.cpp
 	"compiler.h"
 
 1503945522 c:\users\franc\documents\ufpb\compiladores\general_compiler\compiler.h
@@ -79,7 +79,7 @@
 	"automato.h"
 	"token.h"
 
-1504627944 c:\users\franc\documents\ufpb\compiladores\general_compiler\sintatic_analyser.h
+1504633651 c:\users\franc\documents\ufpb\compiladores\general_compiler\sintatic_analyser.h
 	"token.h"
 	<vector>
 	<iostream>
@@ -95,6 +95,6 @@
 	<iostream>
 	"compiler.h"
 
-1504627498 source:c:\users\franc\documents\ufpb\compiladores\general_compiler\sintatic_analyser.cpp
+1504633951 source:c:\users\franc\documents\ufpb\compiladores\general_compiler\sintatic_analyser.cpp
 	"sintatic_analyser.h"
 

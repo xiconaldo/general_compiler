@@ -9,6 +9,14 @@
 #include <sstream>
 #include <cmath>
 
+struct SintaticTree{
+    Token token_;
+    std::vector< SintaticTree > children_;
+
+    SintaticTree& createNewChild();
+    void print();
+};
+
 struct SintaticErrorException{
     uint line_;
     std::string description_;
@@ -28,6 +36,8 @@ private:
 
 	std::vector< std::vector< uint > > rules_id_;
 	std::vector< std::vector< Token > > rules_def_;
+
+    SintaticTree root_;
     std::vector<std::string> token_type_strings_;
 	std::vector< std::string > error_info_;
 
@@ -37,7 +47,7 @@ public:
 
 	void analyse(const std::vector< Token >& token_input);
 
-	void expandNonTerminal(int non_terminal_id);
+	void expandNonTerminal(int non_terminal_id, SintaticTree& node);
 
 	int checkForRuleMatch(int non_terminal_id);
 
@@ -48,6 +58,8 @@ public:
     void printResults();
 
 	bool success();
+
+    void printTree();
 
 };
 

@@ -1,5 +1,48 @@
 #include "sintatic_analyser.h"
 
+SintaticTree& SintaticTree::createNewChild(){
+	this->children_.push_back(SintaticTree());
+	return this->children_.back();
+}
+
+void SintaticTree::print(){
+	static int depth = -1;
+	static std::vector<int> path;
+
+	depth++;
+
+	for(int i = 0; i < depth; i++){
+		if(i == depth-1)
+			std::cout << "+--";
+		else if( path[i] == 0)
+			std::cout << "|  ";
+		else
+			std::cout << "  ";
+	}
+
+	std::cout << this->token_.type_ << std::endl;
+
+	for(int i = 0; i < depth; i++){
+		if( path[i] == 0)
+			std::cout << "|  ";
+		else
+			std::cout << "   ";
+	}
+
+	if(this->children_.empty())
+		std::cout << "|  ";
+
+	std::cout << std::endl;
+
+	for(int i = 0; i < children_.size(); i++){
+		path.push_back(i);
+		children_[i].print();
+		path.pop_back();
+	}
+
+	depth--;
+}
+
 SintaticAnalyser::SintaticAnalyser(const std::string& config_file){
 
 	cursor_pos_ = 0;
@@ -65,7 +108,7 @@ void SintaticAnalyser::analyse(const std::vector< Token >& token_input){
 	currentToken = token_input_[cursor_pos_];
 
 	try{
-		expandNonTerminal(-1);
+		expandNonTerminal(-1, root_);
 
 		if( cursor_pos_ < token_input_.size() )
 			throw SintaticErrorException(currentToken.line_, "Unexpected symbols at end of file");
@@ -77,7 +120,9 @@ void SintaticAnalyser::analyse(const std::vector< Token >& token_input){
 	}
 }
 
-void SintaticAnalyser::expandNonTerminal(int non_terminal_id){
+void SintaticAnalyser::expandNonTerminal(int non_terminal_id, SintaticTree& node){
+
+	node.token_ = currentToken;
 
 	int rule_id = checkForRuleMatch(non_terminal_id);
 	std::vector< Token > current_rule = rules_def_[ rule_id < 0 ? -rule_id-1 : rule_id ];
@@ -87,14 +132,19 @@ void SintaticAnalyser::expandNonTerminal(int non_terminal_id){
 		checkForEarlyEndOfFile();
 
 		if( current_rule[i].type_ > 0 && current_rule[i].type_ == currentToken.type_ ||
-			current_rule[i].type_ == 0 && current_rule[i].token_ == currentToken.token_ )
+			current_rule[i].type_ == 0 && current_rule[i].token_ == currentToken.token_ ){
+			node.createNewChild().token_ = currentToken;
 			nextToken();
+		}
 
-		else if( current_rule[i].type_ < 0)
-			expandNonTerminal(current_rule[i].type_);
+		else if( current_rule[i].type_ < 0){
+			expandNonTerminal(current_rule[i].type_, node.createNewChild() );
+		}
 
-		else if( current_rule[i].type_ == 0 && current_rule[i].token_.empty() )
+		else if( current_rule[i].type_ == 0 && current_rule[i].token_.empty() ){
+			node.createNewChild().token_ = current_rule[i]; // empty
 			continue;
+		}
 
 		else{
 			std::ostringstream msg;
@@ -147,4 +197,8 @@ void SintaticAnalyser::printResults(){
 
 bool SintaticAnalyser::success(){
 	return error_info_.empty();
+}
+
+void SintaticAnalyser::printTree(){
+	root_.print();
 }

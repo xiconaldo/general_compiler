@@ -14,6 +14,8 @@ void Compiler::analyse(const std::string& code){
 	lexical->analyse(code);
 	const std::vector< Token > tokens = lexical->getTokenList();
 	sintatic->analyse(tokens);
+
+	sintatic->printTree();
 }
 
 void Compiler::printResults(){
