@@ -1,5 +1,8 @@
 #include "sintatic_analyser.h"
 
+std::vector<std::string> SintaticTree::token_type_strings_ = std::vector<std::string>();
+std::vector<std::string> SintaticTree::non_terminal_strings_ = std::vector<std::string>();
+
 SintaticTree& SintaticTree::createNewChild(){
 	this->children_.push_back(SintaticTree());
 	return this->children_.back();
@@ -17,10 +20,19 @@ void SintaticTree::print(){
 		else if( path[i] == 0)
 			std::cout << "|  ";
 		else
-			std::cout << "  ";
+			std::cout << "   ";
 	}
 
-	std::cout << this->token_.type_ << std::endl;
+	if(this->token_.type_ > 0 && this->token_.token_.empty())
+		std::cout << token_type_strings_[this->token_.type_] << std::endl;
+	else if(this->token_.type_ > 0)
+		std::cout << this->token_.token_ << std::endl;
+	else if(this->token_.type_ < 0)
+		std::cout << non_terminal_strings_[-this->token_.type_] << std::endl;
+	else if(this->token_.type_ == 0 && this->token_.token_.empty())
+		std::cout << token_type_strings_[this->token_.type_] << std::endl;
+	else
+		std::cout << this->token_.token_ << std::endl;
 
 	for(int i = 0; i < depth; i++){
 		if( path[i] == 0)
@@ -29,13 +41,16 @@ void SintaticTree::print(){
 			std::cout << "   ";
 	}
 
-	if(this->children_.empty())
+	if(!this->children_.empty())
 		std::cout << "|  ";
 
 	std::cout << std::endl;
 
 	for(int i = 0; i < children_.size(); i++){
-		path.push_back(i);
+		if(i == children_.size()-1)
+			path.push_back(1);
+		else
+			path.push_back(0);
 		children_[i].print();
 		path.pop_back();
 	}
@@ -46,7 +61,8 @@ void SintaticTree::print(){
 SintaticAnalyser::SintaticAnalyser(const std::string& config_file){
 
 	cursor_pos_ = 0;
-	token_type_strings_.push_back("NO_TYPE");
+	token_type_strings_.push_back("EMPTY");
+	non_terminal_strings_.push_back("NO_TYPE");
 
 	std::ifstream config{ config_file };
 	if(!config.is_open()){
@@ -60,6 +76,10 @@ SintaticAnalyser::SintaticAnalyser(const std::string& config_file){
     while( getline(config, line) ){
         if(line.substr(0, 2) == "#t"){
             token_type_strings_.push_back(line.substr(3));
+		}
+
+		else if(line.substr(0, 2) == "#n"){
+            non_terminal_strings_.push_back(line.substr(3));
 		}
 
         else if(line.substr(0, 2) == "#g"){
@@ -97,6 +117,9 @@ SintaticAnalyser::SintaticAnalyser(const std::string& config_file){
 	}
 
 	config.close();
+
+	SintaticTree::token_type_strings_ = token_type_strings_;
+	SintaticTree::non_terminal_strings_ = non_terminal_strings_;
 }
 
 void SintaticAnalyser::analyse(const std::vector< Token >& token_input){
@@ -122,7 +145,7 @@ void SintaticAnalyser::analyse(const std::vector< Token >& token_input){
 
 void SintaticAnalyser::expandNonTerminal(int non_terminal_id, SintaticTree& node){
 
-	node.token_ = currentToken;
+	node.token_ = {non_terminal_id, "", 1};
 
 	int rule_id = checkForRuleMatch(non_terminal_id);
 	std::vector< Token > current_rule = rules_def_[ rule_id < 0 ? -rule_id-1 : rule_id ];

@@ -9,6 +9,39 @@
 #t MUL_OPERATOR
 #t COMMENT
 
+#n <PROGRAM>
+#n <VAR_DECL>
+#n <VAR_DECL_LIST>
+#n <VAR_DECL_LIST*>
+#n <ID_LIST>
+#n <ID_LIST*>
+#n <TYPE>
+#n <SUBPROG_DECLS>
+#n <SUBPROG_DECLS*>
+#n <SUBPROG_DECL>
+#n <ARGS>
+#n <PARAM_LIST>
+#n <PARAM_LIST*>
+#n <COMP_COMMAN>
+#n <OPT_COMMAN>
+#n <COMMAN_LIST>
+#n <COMMAN_LIST*>
+#n <COMMAND>
+#n <COMMAND*>
+#n <ESLE>
+#n <PROC_ACTIV*>
+#n <EXPR_LIST>
+#n <EXPR_LIST*>
+#n <EXPR>
+#n <EXPR*>
+#n <SIMPLE_EXPR>
+#n <SIMPLE_EXPR*>
+#n <TERM>
+#n <TERM*>
+#n <FACTOR>
+#n <FACTOR*>
+#n <SIGNAL>
+
 #g 32
 -1 0 program 2 0 ; -2 -8 -14 0 .
 -2 0 var -3

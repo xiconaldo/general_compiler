@@ -12,6 +12,8 @@
 struct SintaticTree{
     Token token_;
     std::vector< SintaticTree > children_;
+	static std::vector<std::string> token_type_strings_;
+	static std::vector<std::string> non_terminal_strings_;
 
     SintaticTree& createNewChild();
     void print();
@@ -39,6 +41,7 @@ private:
 
     SintaticTree root_;
     std::vector<std::string> token_type_strings_;
+	std::vector<std::string> non_terminal_strings_;
 	std::vector< std::string > error_info_;
 
 public:
