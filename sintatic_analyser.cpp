@@ -76,10 +76,12 @@ SintaticAnalyser::SintaticAnalyser(const std::string& config_file){
     while( getline(config, line) ){
         if(line.substr(0, 2) == "#t"){
             token_type_strings_.push_back(line.substr(3));
+			if(token_type_strings_.back().back() < 31) token_type_strings_.back().pop_back();
 		}
 
 		else if(line.substr(0, 2) == "#n"){
             non_terminal_strings_.push_back(line.substr(3));
+			if(non_terminal_strings_.back().back() < 31) non_terminal_strings_.back().pop_back();
 		}
 
         else if(line.substr(0, 2) == "#g"){
@@ -175,7 +177,7 @@ void SintaticAnalyser::expandNonTerminal(int non_terminal_id, SintaticTree& node
 			msg << "\""
 				<< (current_rule[i].type_ ? token_type_strings_[current_rule[i].type_] : current_rule[i].token_)
 				<< "\" expected but \""
-				<< (currentToken.type_ ? token_type_strings_[currentToken.type_] : currentToken.token_)
+				<< (current_rule[i].type_ ? token_type_strings_[currentToken.type_] : currentToken.token_)
 				<< "\" found";
 
 			throw SintaticErrorException(currentToken.line_, msg.str());

@@ -14,13 +14,11 @@ void Compiler::analyse(const std::string& code){
 	lexical->analyse(code);
 	const std::vector< Token > tokens = lexical->getTokenList();
 	sintatic->analyse(tokens);
-
-	sintatic->printTree();
 }
 
 void Compiler::printResults(){
 	if( lexical->success() && sintatic->success() ){
-		std::cout << "Successfully compilation!" << std::endl;
+		std::cout << "Successfully compilation!" << std::endl << std::endl;
 		return;
 	}
 
@@ -28,4 +26,12 @@ void Compiler::printResults(){
 	lexical->printResults();
 	std::cout << std::endl;
 	sintatic->printResults();
+}
+
+void Compiler::printLexicalTable(){
+	lexical->printGeneratedTable();
+}
+
+void Compiler::printSintaticTree(){
+	sintatic->printTree();
 }

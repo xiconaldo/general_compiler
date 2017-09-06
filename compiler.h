@@ -21,6 +21,10 @@ public:
 
 	void printResults();
 
+	void printLexicalTable();
+
+	void printSintaticTree();
+
 };
 
 #endif
