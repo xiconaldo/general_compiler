@@ -2,16 +2,16 @@ CXX = g++
 CXXFLAGS = -std=c++11 -O3
 CXXFLAGSDEBUG = -std=c++11 -O0 -g3
 SRC = $(wildcard *.cpp)
-OBJ = $(SRC:.c=.o)
+OBJ = $(SRC:.cpp=.o)
 
-all: $(OBJ)
-	$(CXX) $(CXXFLAGS) $^ -o analyser
+compiler: $(OBJ)
+	$(CXX) $(CXXFLAGS) $^ -o compiler
 
-compile: $(SRC)
-	$(CXX) $(CXXFLAGS) $^ -c
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) $^ -c -o $@
 
 debug:
-	$(CXX) $(CXXFLAGSDEBUG) *.cpp -o analyser
+	$(CXX) $(CXXFLAGSDEBUG) *.cpp -o compiler
 
 clean:
-	rm -f *.o analyser
+	rm -f *.o compiler
