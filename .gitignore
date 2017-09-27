@@ -1,4 +1,6 @@
 *.o
+*.exe
+*.json
 obj/
 bin/
 analyser
