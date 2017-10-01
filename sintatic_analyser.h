@@ -58,6 +58,8 @@ public:
 
 	void checkForEarlyEndOfFile();
 
+	const SintaticTree& getSintaticTree();
+
     void printResults();
 
 	bool success();

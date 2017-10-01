@@ -3,6 +3,7 @@
 
 #include "lexical_analyser.h"
 #include "sintatic_analyser.h"
+#include "semantic_analyser.h"
 
 class Compiler{
 
@@ -10,6 +11,7 @@ private:
 
 	LexicalAnalyser* lexical = nullptr;
 	SintaticAnalyser* sintatic = nullptr;
+	SemanticAnalyser* semantic = nullptr;
 
 public:
 

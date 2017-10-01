@@ -7,9 +7,9 @@ int main(int argc, char* argv[])
 	Compiler comp{ std::string{argv[1]}, std::string{argv[2]} };
 	comp.analyse(std::string{argv[3]});
 
-	if(argc > 4 && std::string{argv[4]} == "lex")
+	if(argc > 4 && std::string{argv[4]} == "table")
 		comp.printLexicalTable();
-	else if(argc > 4 && std::string{argv[4]} == "sint")
+	else if(argc > 4 && std::string{argv[4]} == "tree")
 		comp.printSintaticTree();
 	else if(argc > 4 && std::string{argv[4]} == "all"){
 		comp.printLexicalTable();

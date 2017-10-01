@@ -212,6 +212,10 @@ void SintaticAnalyser::checkForEarlyEndOfFile(){
 		throw SintaticErrorException(currentToken.line_, "Unexpected end of file");
 }
 
+const SintaticTree& SintaticAnalyser::getSintaticTree(){
+	return root_;
+}
+
 void SintaticAnalyser::printResults(){
 	if( !error_info_.empty() ){
 		std::cout << "Sintatic error(s) detected:" << std::endl;
