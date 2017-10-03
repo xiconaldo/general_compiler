@@ -9,10 +9,12 @@ procedure troca(valor_1, valor_2: integer);
   var aux, int0: integer;
 
   begin
+    real0 := 5.0;
+    int3 := 34;
     aux := valor_1;
     valor_1 := valor_2;
     valor_2 := aux;
-    xxx
+    valor_2 := false or true
   end;
 
 begin
