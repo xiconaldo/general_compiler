@@ -24,6 +24,8 @@ class SemanticAnalyser{
     std::vector<SuperToken> symbol_table;
     std::vector<VarType> type_stack;
 
+    std::vector< std::string > error_info_;
+
 public:
     void analyse(const SintaticTree& root);
     void search(const SintaticTree& root);
@@ -32,6 +34,8 @@ public:
     VarType getIdentifierType(const std::string& id);
     void printSymbolTable() const;
     void printTypeStack() const;
+    void printResults();
+    bool success();
 };
 
 #endif

@@ -99,6 +99,82 @@ void SemanticAnalyser::search(const SintaticTree& node){
         search(node.children_[i]);
     }
 
+    std::string op = "";
+    if(!node.children_.empty()) 
+        op = node.children_[0].token_.token_;
+
+    if( node.token_.type_ != -32 && op == "+" || op == "-" || op == "*" || op == "/"){
+        VarType op1 = type_stack.back();
+        type_stack.pop_back();
+        VarType op2 = type_stack.back();
+        type_stack.pop_back();
+
+        if( (op1 == INTEGER || op1 == REAL) && (op2 == INTEGER || op2 == REAL) ){
+            if( op1 == op2 ){
+                type_stack.push_back(op1);
+            }
+            else{
+                type_stack.push_back(REAL);
+            }
+        }
+        else{
+            std::cout << "Incompatible types on operator " << op << std::endl;
+        }
+    }
+    else if(op == ":="){
+
+        VarType op1 = type_stack.back();
+        type_stack.pop_back();
+        VarType op2 = type_stack.back();
+        type_stack.pop_back();
+
+        if( op1 == op2 ){
+            type_stack.push_back(op1);
+        }
+        else{
+            std::cout << "Incompatible types on operator " << op << std::endl;
+        }
+
+    }
+    else if(op == "or" || op == "and"){
+
+        VarType op1 = type_stack.back();
+        type_stack.pop_back();
+        VarType op2 = type_stack.back();
+        type_stack.pop_back();
+
+        if( op1 == BOOLEAN && op2 == BOOLEAN ){
+            type_stack.push_back(op1);
+        }
+        else{
+            std::cout << "Incompatible types on operator " << op << std::endl;
+        }
+
+    }
+    else if(op == "not"){
+        
+        VarType op1 = type_stack.back();
+
+        if( op1 != BOOLEAN ){
+            std::cout << "Incompatible types on operator " << op << std::endl;
+        }
+
+    }
+    else if(op == ">" || op == ">=" || op == "<" || op == "<=" || op == "=" || op == "<>"){
+        
+        VarType op1 = type_stack.back();
+        type_stack.pop_back();
+        VarType op2 = type_stack.back();
+        type_stack.pop_back();
+
+        if( (op1 == INTEGER || op1 == REAL) && (op2 == INTEGER || op2 == REAL) ){
+            type_stack.push_back(BOOLEAN);
+        }
+        else{
+            std::cout << "Incompatible types on operator " << op << std::endl;
+        }
+    }
+
     if (node.token_.type_ == -2 || node.token_.type_ == -11){
         symbol_table_flag = MISSING_TYPE;
     }
@@ -156,4 +232,16 @@ void SemanticAnalyser::printTypeStack() const{
         std::cout << type_stack[i] << " ";
     }
     std::cout << std::endl;
+}
+
+void SemanticAnalyser::printResults(){
+	if( !error_info_.empty() ){
+        std::cout << "Semantic error(s) detected:" << std::endl;
+        for( std::string err : error_info_)
+            std::cout << err << std::endl;
+    }
+}
+
+bool SemanticAnalyser::success(){
+	return error_info_.empty();
 }

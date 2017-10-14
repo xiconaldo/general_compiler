@@ -21,7 +21,7 @@ void Compiler::analyse(const std::string& code){
 }
 
 void Compiler::printResults(){
-	if( lexical->success() && sintatic->success() ){
+	if( lexical->success() && sintatic->success() /* && semantic->sucess() */){
 		std::cout << "Successfully compilation!" << std::endl << std::endl;
 		return;
 	}
@@ -30,6 +30,8 @@ void Compiler::printResults(){
 	lexical->printResults();
 	std::cout << std::endl;
 	sintatic->printResults();
+	//std::cout << std::endl;
+	//semantic->printResults();
 }
 
 void Compiler::printLexicalTable(){
