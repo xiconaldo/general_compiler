@@ -22,11 +22,11 @@ void Compiler::analyse(const std::string& code){
 
 void Compiler::printResults(){
 	if( lexical->success() && sintatic->success() && semantic->success() ){
-		std::cout << "Successfully compilation!" << std::endl << std::endl;
+		std::cout << "\nSuccessfully compilation!" << std::endl << std::endl;
 		return;
 	}
 
-	std::cout << "Compilation failed!";
+	std::cout << "\nCompilation failed!";
 	lexical->printResults();
 	sintatic->printResults();
 	semantic->printResults();
