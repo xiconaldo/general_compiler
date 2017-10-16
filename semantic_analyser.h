@@ -3,7 +3,7 @@
 
 #include "sintatic_analyser.h"
 
-enum{ NO_FLAG, VAR_DECL, PROGRAM, PROCEDURE, SEARCH_NUMBERS };
+enum{ NO_FLAG, VAR_DECL, PROGRAM, PROCEDURE, VAR_USE };
 enum VarType{ MISSING_TYPE, INTEGER, REAL, BOOLEAN, PROGRAM_TYPE, PROCEDURE_TYPE };
 
 struct SuperToken{
@@ -25,8 +25,7 @@ struct SemanticErrorException{
 
 class SemanticAnalyser{
 
-    uint symbol_table_flag = NO_FLAG;
-    uint type_stack_flag = NO_FLAG;
+    uint mode_flag = NO_FLAG;
     const SintaticTree* aux_node = nullptr;  // verificar essa solucao
 
     uint scope_count;

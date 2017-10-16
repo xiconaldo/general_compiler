@@ -29,4 +29,7 @@ procedure troca(valor_1, valor_2: integer);
 
 begin
 
+  troca(real1, int4);
+  kask := kask
+
 end.

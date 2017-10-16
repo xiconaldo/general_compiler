@@ -16,17 +16,13 @@ private:
 public:
 
 	Compiler(const std::string& automato_file, const std::string& grammar_file);
-
 	~Compiler();
-
 	void analyse(const std::string& code);
-
 	void printResults();
-
 	void printLexicalTable();
-
 	void printSintaticTree();
-
+	void printScopeStack();
+	void printTypeStack();
 };
 
 #endif

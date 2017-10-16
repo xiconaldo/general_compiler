@@ -39,3 +39,11 @@ void Compiler::printLexicalTable(){
 void Compiler::printSintaticTree(){
 	sintatic->printTree();
 }
+
+void Compiler::printScopeStack(){
+	semantic->printSymbolTable();
+}
+
+void Compiler::printTypeStack(){
+	semantic->printTypeStack();
+}
