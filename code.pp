@@ -14,7 +14,7 @@ procedure troca(valor_1, valor_2: integer);
     int3 := 34;
     aux := valor_1;
     valor_1 := valor_2;
-    valor_2 := aux * valor_1 + valor_2;
+    bool1 := aux * valor_1 + valor_2;
     bool1 := false or false;
 
     if(bool1) then

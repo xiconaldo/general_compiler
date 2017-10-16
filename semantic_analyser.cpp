@@ -5,8 +5,16 @@ bool SuperToken::operator==(const SuperToken& x) const{
 }
 
 void SemanticAnalyser::analyse(const SintaticTree& root){
-    search(root);
-    printTypeStack();
+
+    try{
+        search(root);
+    }
+    catch( SemanticErrorException err){
+        std::ostringstream ss;
+        ss << "At line " << err.line_ << ": " << err.description_;
+        error_info_.push_back(ss.str());
+    }
+    //printTypeStack();
 }
 
 void SemanticAnalyser::search(const SintaticTree& node){
@@ -61,26 +69,36 @@ void SemanticAnalyser::search(const SintaticTree& node){
     else if (node.token_.type_ == 2){
         if(symbol_table_flag == PROGRAM){
             symbol_table.push_back( {{0,"$",0}, MISSING_TYPE} );
-            if(findOnScope({node.token_, PROGRAM_TYPE} ))
-                std::cout << "Multiple declaration " << node.token_.token_ << std::endl;
+
+            if(findOnScope({node.token_, PROGRAM_TYPE} )){
+                throw SemanticErrorException{ node.token_.line_, "Multiple declaration of symbol " + node.token_.token_};
+            }
+
             symbol_table.push_back( {node.token_, PROGRAM_TYPE} );
             symbol_table_flag = NO_FLAG;
         }
         else if (symbol_table_flag == PROCEDURE){
-            if(findOnScope({node.token_, PROCEDURE_TYPE} ))
-                std::cout << "Multiple declaration " << node.token_.token_ << std::endl;
+
+            if(findOnScope({node.token_, PROCEDURE_TYPE} )){
+                throw SemanticErrorException{ node.token_.line_, "Multiple declaration of symbol " + node.token_.token_};
+            }
+
             symbol_table.push_back( {node.token_, PROCEDURE_TYPE} );
             symbol_table.push_back( {{0,"$",0}, MISSING_TYPE} );
             symbol_table_flag = NO_FLAG;
         }
         else if (symbol_table_flag == VAR_DECL){
-            if(findOnScope({node.token_, MISSING_TYPE} ))
-                std::cout << "Multiple declaration " << node.token_.token_ << std::endl;
+
+            if(findOnScope({node.token_, MISSING_TYPE} )){
+                throw SemanticErrorException{ node.token_.line_, "Multiple declaration of symbol " + node.token_.token_};
+            }
+
             aux_symbol_table.push_back( {node.token_, MISSING_TYPE} );
         }
         else{
-            if(!findDeclaration({node.token_, MISSING_TYPE} ))
-                std::cout << "Undeclared symbol " << node.token_.token_ << std::endl;
+            if(!findDeclaration({node.token_, MISSING_TYPE} )){
+                throw SemanticErrorException{ node.token_.line_, "Undeclared symbol " + node.token_.token_};
+            }
         }
     }
 
@@ -118,7 +136,8 @@ void SemanticAnalyser::search(const SintaticTree& node){
             }
         }
         else{
-            std::cout << "Incompatible types on operator " << op << std::endl;
+            throw SemanticErrorException{ node.children_[0].token_.line_, 
+                "Incompatible operands type on " + op + " operator. Expecting INTEGER or REAL operands."};
         }
     }
     else if(op == ":="){
@@ -132,7 +151,8 @@ void SemanticAnalyser::search(const SintaticTree& node){
             type_stack.push_back(op1);
         }
         else{
-            std::cout << "Incompatible types on operator " << op << std::endl;
+            throw SemanticErrorException{ node.children_[0].token_.line_, 
+                "Incompatible operands type on " + op + " operator. Expecting same type left and right operands."};
         }
 
     }
@@ -147,7 +167,8 @@ void SemanticAnalyser::search(const SintaticTree& node){
             type_stack.push_back(op1);
         }
         else{
-            std::cout << "Incompatible types on operator " << op << std::endl;
+            throw SemanticErrorException{ node.children_[0].token_.line_, 
+                "Incompatible operands type on " + op + " operator. Expecting BOOLEAN operands."};
         }
 
     }
@@ -156,7 +177,8 @@ void SemanticAnalyser::search(const SintaticTree& node){
         VarType op1 = type_stack.back();
 
         if( op1 != BOOLEAN ){
-            std::cout << "Incompatible types on operator " << op << std::endl;
+            throw SemanticErrorException{ node.children_[0].token_.line_, 
+                "Incompatible operand type on " + op + " operator. Expecting BOOLEAN operand."};
         }
 
     }
@@ -171,7 +193,8 @@ void SemanticAnalyser::search(const SintaticTree& node){
             type_stack.push_back(BOOLEAN);
         }
         else{
-            std::cout << "Incompatible types on operator " << op << std::endl;
+            throw SemanticErrorException{ node.children_[0].token_.line_, 
+                "Incompatible operands type on " + op + " operator. Expecting NUMERICAL operands."};
         }
     }
 
@@ -240,6 +263,7 @@ void SemanticAnalyser::printResults(){
         for( std::string err : error_info_)
             std::cout << err << std::endl;
     }
+    std::cout << std::endl;
 }
 
 bool SemanticAnalyser::success(){

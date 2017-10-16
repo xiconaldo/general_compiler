@@ -21,17 +21,15 @@ void Compiler::analyse(const std::string& code){
 }
 
 void Compiler::printResults(){
-	if( lexical->success() && sintatic->success() /* && semantic->sucess() */){
+	if( lexical->success() && sintatic->success() && semantic->success() ){
 		std::cout << "Successfully compilation!" << std::endl << std::endl;
 		return;
 	}
 
-	std::cout << "Compilation failed!" << std::endl << std::endl;
+	std::cout << "Compilation failed!";
 	lexical->printResults();
-	std::cout << std::endl;
 	sintatic->printResults();
-	//std::cout << std::endl;
-	//semantic->printResults();
+	semantic->printResults();
 }
 
 void Compiler::printLexicalTable(){

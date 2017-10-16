@@ -13,6 +13,16 @@ struct SuperToken{
     bool operator==(const SuperToken& x) const;
 };
 
+struct SemanticErrorException{
+    uint line_;
+    std::string description_;
+
+    SemanticErrorException(uint line, const std::string& description) :
+        line_(line),
+        description_(description)
+    {}
+};
+
 class SemanticAnalyser{
 
     uint symbol_table_flag = NO_FLAG;

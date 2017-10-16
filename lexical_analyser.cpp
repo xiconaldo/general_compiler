@@ -285,6 +285,7 @@ void LexicalAnalyser::printResults(){
         for( std::string err : error_info_)
             std::cout << err << std::endl;
     }
+    std::cout << std::endl;
 }
 
 bool LexicalAnalyser::success(){

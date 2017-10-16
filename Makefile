@@ -5,7 +5,7 @@ SRC = $(wildcard *.cpp)
 OBJ = $(SRC:.cpp=.o)
 
 compiler: $(OBJ)
-	$(CXX) $(CXXFLAGS) $^ -o compiler
+	$(CXX) $(CXXFLAGS) $^ -o $@
 
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) $^ -c -o $@
