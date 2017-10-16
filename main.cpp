@@ -10,7 +10,7 @@ int main(int argc, char* argv[])
 	if(argc > 4){
 		std::cout << "\n";
 		std::string arg4 = std::string{argv[4]};
-	if(arg4 == "table")
+	if(arg4 == "symbol")
 		comp.printLexicalTable();
 	else if(arg4 == "tree")
 		comp.printSintaticTree();
