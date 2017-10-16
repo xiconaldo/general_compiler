@@ -19,6 +19,9 @@ A example is provided too. The next one is the code file to be compiled. Lastly,
 came the optional flags that allows print some information about the process.
 
 symbol: Lexical symbols table
+
 tree  : Sinatic tree
+
 scope : Scope stack
+
 type  : Type stack
